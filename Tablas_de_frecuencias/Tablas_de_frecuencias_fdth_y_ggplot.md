@@ -5,9 +5,9 @@ Felipe Andrés Martínez Vera
 
 # **En este cuaderno se construye una tabla de frecuencias y sus respectivos gráficos de barras y de pastel empleando fdth y ggplot**
 
-## **1. Cargar las librerias**
+## **1. Cargar las librerías**
 
-Como ya se mencionó en esta ocasión se van a emplerar **fdth** y
+Como ya se mencionó en esta ocasión se van a emplear **fdth** y
 **ggplot**, lo cuales no se cargan por defecto en R.
 
 ``` r
@@ -36,7 +36,7 @@ library(fdth)
     ## 
     ##     sd, var
 
-Si no ha instalado las librerias debe instalarlas ejecutando lo
+Si no ha instalado las librerías debe instalarlas ejecutando lo
 siguiente:
 
 ``` r
@@ -48,7 +48,7 @@ y después volver a cargar la librerías.
 
 ## 2. Importar los datos
 
-Después de cargar la librerìas se deben importar los datos, los cuales
+Después de cargar la librerías se deben importar los datos, los cuales
 debieron ser subidos previamente a Colab empleando el menú de la
 izquierda
 
@@ -253,6 +253,10 @@ ggplot(tab_freq_sex, aes(x = Category, y = f, fill = Category)) +
 ```
 
 ![](Tablas_de_frecuencias_fdth_y_ggplot_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+**Para elaborar el gráfico de barras de frecuencias relativas se debe
+cambiar la variable asignada al eje y**. En este caso se debe asignar
+**rf** en lugar de *f*.
 
 ## **4. Construcción del gráfico de torta o pastel**
 
