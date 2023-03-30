@@ -256,7 +256,7 @@ ggplot(tab_freq_sex, aes(x = Category, y = f, fill = Category)) +
 
 **Para elaborar el gráfico de barras de frecuencias relativas se debe
 cambiar la variable asignada al eje y**. En este caso se debe asignar
-**rf** en lugar de *f*.
+**rf** en lugar de **f**.
 
 ## **4. Construcción del gráfico de torta o pastel**
 
