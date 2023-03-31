@@ -35,7 +35,7 @@ y después volver a cargar la librerías.
 Después de cargar la librerìas se deben importar los datos, los cuales debieron ser subidos previamente a Colab empleando el menú de la izquierda
 
 ```{r echo=FALSE}
-setwd("C:/GitHub/Estadistica_I/Distribuciones_de_frecuencias")
+setwd("C:/GitHub/Estadistica-I-2023-I/Distribuciones_de_frecuencias")
 datos = read.csv("Clientes_Telcomunicaciones-Churn.csv")
 head(datos)
 ```
@@ -106,13 +106,48 @@ brks = seq(from = 18, to = 120, by = (120-18)/14)
 brks
 ```
 
-# **4. Construccción del histograma y el polígono de frecuencias**
+# **4. Construccción del histograma**
+
+Al igual que con los gráficos de barras el primer paso es la creación del lienzo y la asignación de las variables a los ejes. En este paso se debe tener en cuenta lo siguiente:
+
+- **Utilizar lo datos originales** y no la distribución de frecuencias construida.
+
+- La variable para la se quiere construir el histograma se asigna al eje x y **el eje y se deja sin variable asignada**.
+
+```{r}
+ggplot(datos, aes(x = MonthlyCharges))
+```
+
+A continuación se adiciona una capa **geom_histogram**. Tenga en cuenta que por defecto se crean 30 clases.
 
 ```{r}
 ggplot(datos, aes(x = MonthlyCharges))+
-  geom_histogram(breaks = brks, closed = "left", color = "white", linewidth = 0.25)+
-  stat_bin(breaks = brks, closed = "left", geom='text', aes(label=..count..), vjust = -0.5)
+  geom_histogram()
 ```
+
+Para cambiar el número de clases usamos en parametro **bins** dentro de la capa **geom_histogram**. Por ejemplo para obtener 14 clases se usa:
+
+```{r}
+ggplot(datos, aes(x = MonthlyCharges))+
+  geom_histogram(bins = 14)
+```
+
+El argumento **bins** ajusta el número de clases pero cambio los límites de la distribución de frecuencias. Para lograr el histograma correspondiente a la distribución de frecuencias que se construyó previamente se debe utilizar el argumento **breaks** para indicar los límites de las clase, los cuales se calcularon previamente (están almacenados en el objeto brks).
+
+```{r}
+ggplot(datos, aes(x = MonthlyCharges))+
+  geom_histogram(breaks = brks, closed = "left", color = "white")
+```
+
+Finalmente se puede adicionar una cada **stat_bins** (calcula estadísticas para cada una de las clases) para adicionar las etiquetas que indican cuantas observaciones hay en cada clase.
+
+```{r}
+ggplot(datos, aes(x = MonthlyCharges))+
+  geom_histogram(breaks = brks, closed = "left", color = "white")+
+  stat_bin(breaks = brks, closed = "left", geom='text', aes(label=after_stat(count)), vjust = -0.5)
+```
+
+# **5. Construccción del polígono de frecuencias**
 
 ```{r}
 ggplot(datos, aes(x = MonthlyCharges))+

@@ -251,21 +251,82 @@ brks
     ##  [1]  18.00  25.29  32.57  39.86  47.14  54.43  61.71  69.00  76.29  83.57
     ## [11]  90.86  98.14 105.43 112.71 120.00
 
-# **4. Construccción del histograma y el polígono de frecuencias**
+# **4. Construccción del histograma**
+
+Al igual que con los gráficos de barras el primer paso es la creación
+del lienzo y la asignación de las variables a los ejes. En este paso se
+debe tener en cuenta lo siguiente:
+
+- **Utilizar lo datos originales** y no la distribución de frecuencias
+  construida.
+
+- La variable para la se quiere construir el histograma se asigna al eje
+  x y **el eje y se deja sin variable asignada**.
+
+``` r
+ggplot(datos, aes(x = MonthlyCharges))
+```
+
+![](Distribuciones_de_frecuencias_fdth_y_ggplot_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+A continuación se adiciona una capa **geom_histogram**. Tenga en cuenta
+que por defecto se crean 30 clases.
 
 ``` r
 ggplot(datos, aes(x = MonthlyCharges))+
-  geom_histogram(breaks = brks, closed = "left", color = "white", linewidth = 0.25)+
-  stat_bin(breaks = brks, closed = "left", geom='text', aes(label=..count..), vjust = -0.5)
+  geom_histogram()
 ```
 
-    ## Warning: The dot-dot notation (`..count..`) was deprecated in ggplot2 3.4.0.
-    ## ℹ Please use `after_stat(count)` instead.
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 1 rows containing non-finite values (`stat_bin()`).
+
+![](Distribuciones_de_frecuencias_fdth_y_ggplot_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+Para cambiar el número de clases usamos en parametro **bins** dentro de
+la capa **geom_histogram**. Por ejemplo para obtener 14 clases se usa:
+
+``` r
+ggplot(datos, aes(x = MonthlyCharges))+
+  geom_histogram(bins = 14)
+```
+
+    ## Warning: Removed 1 rows containing non-finite values (`stat_bin()`).
+
+![](Distribuciones_de_frecuencias_fdth_y_ggplot_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+El argumento **bins** ajusta el número de clases pero cambio los límites
+de la distribución de frecuencias. Para lograr el histograma
+correspondiente a la distribución de frecuencias que se construyó
+previamente se debe utilizar el argumento **breaks** para indicar los
+límites de las clase, los cuales se calcularon previamente (están
+almacenados en el objeto brks).
+
+``` r
+ggplot(datos, aes(x = MonthlyCharges))+
+  geom_histogram(breaks = brks, closed = "left", color = "white")
+```
+
+    ## Warning: Removed 1 rows containing non-finite values (`stat_bin()`).
+
+![](Distribuciones_de_frecuencias_fdth_y_ggplot_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+Finalmente se puede adicionar una cada **stat_bins** (calcula
+estadísticas para cada una de las clases) para adicionar las etiquetas
+que indican cuantas observaciones hay en cada clase.
+
+``` r
+ggplot(datos, aes(x = MonthlyCharges))+
+  geom_histogram(breaks = brks, closed = "left", color = "white")+
+  stat_bin(breaks = brks, closed = "left", geom='text', aes(label=after_stat(count)), vjust = -0.5)
+```
 
     ## Warning: Removed 1 rows containing non-finite values (`stat_bin()`).
     ## Removed 1 rows containing non-finite values (`stat_bin()`).
 
-![](Distribuciones_de_frecuencias_fdth_y_ggplot_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](Distribuciones_de_frecuencias_fdth_y_ggplot_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+# **5. Construccción del polígono de frecuencias**
 
 ``` r
 ggplot(datos, aes(x = MonthlyCharges))+
@@ -274,4 +335,4 @@ ggplot(datos, aes(x = MonthlyCharges))+
 
     ## Warning: Removed 1 rows containing non-finite values (`stat_bin()`).
 
-![](Distribuciones_de_frecuencias_fdth_y_ggplot_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](Distribuciones_de_frecuencias_fdth_y_ggplot_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
