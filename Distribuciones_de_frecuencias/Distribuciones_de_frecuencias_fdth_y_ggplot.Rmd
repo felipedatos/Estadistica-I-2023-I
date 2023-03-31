@@ -1,0 +1,121 @@
+---
+title: "Distribuciones de frecuencias con fdth y ggplot"
+author: "Felipe Andrés Martínez Vera"
+date: "2023-03-22"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **En este cuaderno se construye una distribución de frecuencias y sus gráficos respectivos empleando fdth y ggplot**
+
+## **1. Cargar las librerías**
+
+Como ya se mencionó en esta ocasión se van a emplear **fdth** y **ggplot**, lo cuales no se cargan por defecto en R.
+
+```{r}
+library(tidyverse)
+library(fdth)
+options(digits = 4, scipen = 9999)
+```
+
+Si no ha instalado las librerías debe instalarlas ejecutando lo siguiente:
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+install.packages("fdth")
+```
+
+y después volver a cargar la librerías.
+
+## 2. Importar los datos
+
+Después de cargar la librerìas se deben importar los datos, los cuales debieron ser subidos previamente a Colab empleando el menú de la izquierda
+
+```{r echo=FALSE}
+setwd("C:/GitHub/Estadistica_I/Distribuciones_de_frecuencias")
+datos = read.csv("Clientes_Telcomunicaciones-Churn.csv")
+head(datos)
+```
+
+# **3. Cálculo de las frecuencias absolutas y relativas**
+
+A partir de este momento se trabajará con la variable **MonthlyCharges** que representa el sexo de los clientes.
+
+Para crear la tabla de frecuencias se procede de la siguiente manera:
+
+-   Se llama el objeto **datos**
+
+-   Se usa la función **pull** para extraer de la base de datos la variable (columna) de interés, en este caso **MonthlyCharges**
+
+-   El resultado se pasa a la función **fdt**
+
+El resultado de este proceso debe ser guardado en una variable, a la cual llamamos posteriormente para visualizar el resultado. **Es necesario quitar las celdas vacias antes de pasar los datos a la función fdt, o usar el argumenteo na.rm con valor TRUE**. A continuación se presentan ambas opciones.
+
+```{r}
+tab_freq_mont = datos %>% pull(MonthlyCharges) %>% fdt(na.rm = TRUE)
+tab_freq_mont
+```
+
+```{r}
+tab_freq_mont = datos %>% pull(MonthlyCharges) %>% na.omit() %>% fdt()
+tab_freq_mont
+```
+
+Por defecto la función **fdt** usa la fórmula de Sturges ($k = 1 + 3.32*Log_{10}(N)$) para determinar el número de clases (k) y toma como límite inferior de la primera clase en valor mínimo, y como limite superior de la última clase el valor máximo.
+
+Si se desea personalizar la distribución de frecuencias obtenida se deben emplear los siguientes paráametros:
+
+- k: permite definir el número de clases. Por ejemplo, si se define k = 7 se obtiene una distribución de frecuencias con 7 clases. **Note que se conservan el límite inferior de la primera clase y el límite superior de la última clase, solo se modifica la amplitud de las clases y por lo tanto su número** 
+
+```{r}
+tab_freq_mont = datos %>% pull(MonthlyCharges) %>% fdt(na.rm = TRUE, k = 7)
+tab_freq_mont
+```
+
+Si se desea modificar los límites de la distribución de frecuencias se deben emplear los argumentos **start** y **end**:
+
+- start: permite definir el límite inferior de la primera clase
+
+- end: permite definir el límite superior de la última clase. Por ejemplo, si se quiere que las clases vayan entre 18 y 120 se definen así:
+
+Sin embargo, usar solo estos dos argumentos no permite controlar el número de clases, este es determinado automáticametne por la función.
+
+```{r}
+tab_freq_mont = datos %>% pull(MonthlyCharges) %>% fdt(na.rm = TRUE, start = 18, end = 120)
+tab_freq_mont
+```
+
+Para modificar los límites de las distribución y controlar el número de clases se deden emplear conjutnamente los argumentos **start**, **end** y **h**. (Esta es la opción recomendada)
+
+- h: permite definir la amplitud de clae (distancia entre los límites infrerior y superior de cada clase). se puede calcular como $h = \frac{\text{end - start}}{\text{No. de clases}}$.
+
+```{r}
+tab_freq_mont = datos %>% pull(MonthlyCharges) %>% fdt(na.rm = TRUE, start = 18, end = 120, h = (120-18)/14)
+tab_freq_mont
+```
+
+Al expandir los límites de la distribución de frecuencias tenga en cuenta no hacerlos en cantidades muy grandes y hacerlo en cantidades similares en ambos extremos.
+
+**Los límites de las clases son presentados con un redondeo que puede dificultar su utilización.** Para conocer estos límites usamos la función **seq**. El argumento **from** debe ser igual al límite interior de la primera clase, **to** debe ser igual al límite superior de la última clase y **by** debe ser igual a h. 
+
+```{r}
+brks = seq(from = 18, to = 120, by = (120-18)/14)
+brks
+```
+
+# **4. Construccción del histograma y el polígono de frecuencias**
+
+```{r}
+ggplot(datos, aes(x = MonthlyCharges))+
+  geom_histogram(breaks = brks, closed = "left", color = "white", linewidth = 0.25)+
+  stat_bin(breaks = brks, closed = "left", geom='text', aes(label=..count..), vjust = -0.5)
+```
+
+```{r}
+ggplot(datos, aes(x = MonthlyCharges))+
+  geom_freqpoly(breaks = brks, closed = "left")
+```
+
