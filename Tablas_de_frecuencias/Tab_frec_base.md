@@ -34,8 +34,9 @@ tanto no se cargará ninguna librería.
 # 4. Importar los datos a R
 
 El archivo que contiene los datos ya fue cargado a **Colab**, pero aún
-no ha sido importado a R. Usaremos la funcion *read.csv* para importar
-los datos a R.
+no ha sido importado a R. Usaremos la funcion *read.csv()* para importar
+los datos a R. Como argumento de debe pasar la ruta al archivo que se
+desea importar.
 
 ``` r
 datos = read.csv("C:/GitHub/Estadistica-I-2023-I/Tablas_de_frecuencias/Clientes_Telcomunicaciones-Churn.csv")
@@ -71,3 +72,12 @@ head(datos)
     4 Bank transfer (automatic)          42.30      1840.75    No
     5          Electronic check          70.70       151.65   Yes
     6          Electronic check          99.65       820.50   Yes
+
+<div>
+
+> **Important**
+>
+> A partir de este momento trabajaremos con la variable “PaymentMethod”
+> que indica el método de pago que utiliza el cliente.
+
+</div>
