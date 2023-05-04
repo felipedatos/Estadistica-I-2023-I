@@ -218,8 +218,8 @@ tab_freq
 
 Para agregar las frecuencias acumuladas crearemos nuevas columnas en el
 dataframe y usaremos la función *cumsum()* para asignar los valores.
-$$tab\_freq\$Fi = cumsum(tab\_freq\$fi)$$
-$$tab\_freq\$Hi = cumsum(tab\_freq\$hi)$$
+$$tab_freq\$Fi = cumsum(tab_freq\$fi)$$
+$$tab_freq\$Hi = cumsum(tab_freq\$hi)$$
 
 ``` r
 tab_freq$Fi = cumsum(tab_freq$fi)
