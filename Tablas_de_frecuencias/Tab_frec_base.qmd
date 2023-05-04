@@ -1,5 +1,5 @@
 ---
-title: "Tablas de frecuencia paquete base"
+title: "Tablas de frecuencia con el paquete base de R"
 author: Felipe Andres Martínez Vera
 format: gfm
 execute: 
@@ -7,23 +7,24 @@ execute:
   echo: false
   warning: false
   error: false
-toc: true
+toc: false
+number-sections: true
 toc-title: "Contenido"
 ---
 
-# 1. Crear un cuaderno nuevo
+# Crear un cuaderno nuevo
 
 Para crear un nuevo cuaderno de **Colab** basado en R use el este link: <https://colab.research.google.com/#create=true&language=r>
 
-# 2. Cargar el archivo que contiene los datos a **Colab**
+# Cargar el archivo que contiene los datos a **Colab**
 
 ![Cargar el archivo a Colab](Cargar_archivo.png){width=80%}
 
-# 3. Cargar las librerias que se van a utilizar
+# Cargar las librerias que se van a utilizar
 
 En este caso la idea es trabajar con el paquete "base" de R. Por lo tanto no se cargará ninguna librería.
 
-# 4. Importar los datos a R
+# Importar los datos a R
 
 El archivo que contiene los datos ya fue cargado a **Colab**, pero aún no ha sido importado a R. Usaremos la funcion *read.csv()* para importar los datos a R. Como argumento de debe pasar la ruta al archivo que se desea importar.
 
@@ -34,7 +35,113 @@ datos = read.csv("C:/GitHub/Estadistica-I-2023-I/Tablas_de_frecuencias/Clientes_
 head(datos)
 ```
 
-::: {.callout-important}
-A partir de este momento trabajaremos con la variable "PaymentMethod" que indica el método de pago que utiliza el cliente.
+::: {.callout-note}
+## Para tener en cuenta
+A partir de este momento trabajaremos con la variable "PaymentMethod" que indica el método de pago que utiliza el cliente. Sin embargo, los procedimientos aplicados pueden ser replicados con cualquier otra variable cualitativa. 
 :::
+
+# Obtención de las frecuencias absolutas
+
+Para obtener las frecuencias absolutas de cada uno de los valores de la variable usamos la función *table()*. Como argumento debemos pasar la columna (o variable) de la cual queremos calcular las frecuencias.
+
+::: {.callout-important}
+## Importante
+Para referirnos a una columna de un dataframe empleamos la siguiente estructura: *"nombre del data frame"\$"nombre de la columna"*, en este caso *datos\$PaymentMethod*.
+:::
+
+
+```{r}
+#| echo: true
+freq_abs = table(datos$PaymentMethod)
+freq_abs
+```
+
+Los resultados muestran que la clase "`r names(freq_abs)[2]`" tiene una frecuencia de `r freq_abs[2]`, la clase "`r names(freq_abs)[3]`" tiene una frecuencia de `r freq_abs[3]`, la clase "`r names(freq_abs)[4]`" tiene una frecuencia de `r freq_abs[4]`, la clase "`r names(freq_abs)[5]`" tiene una frecuencia de `r freq_abs[5]`.
+
+# Obtención de las frecuencias relativas
+
+Para obtener las frecuencias relativas de cada una de las clases usamos la función *prop.table()*. Como argumento debemos pasar la tabla de frecuencias absolutas obtenida en el paso anterior.
+
+```{r}
+#| echo: true
+freq_rels = prop.table(freq_abs)
+freq_rels
+```
+
+Los resultados muestran que la clase "`r names(freq_rels)[2]`" tiene una frecuencia relativa de `r round(freq_rels[2],4)`, la clase "`r names(freq_rels)[3]`" tiene una frecuencia  relativa de `r round(freq_rels[3],4)`, la clase "`r names(freq_rels)[4]`" tiene una frecuencia  relativa de `r round(freq_rels[4],4)`, la clase "`r names(freq_rels)[5]`" tiene una frecuencia relativa de `r round(freq_rels[5],4)`.
+
+::: {.callout-tip}
+## Recuerde
+Si se multiplica la frecuencias relativa de una clase por 100 se obtiene el porcentaje (\%) de observaciones que pertenecen a ella. \newline \newline
+Por ejemplo, la clase "`r names(freq_rels)[2]`" tiene una frecuencia relativa de `r round(freq_rels[2],4)`, por lo que podemos concluir que el `r round(freq_rels[2]*100,2)`\% de las observaciones pertenecen a esta clase.
+:::
+
+# Ensamble de la tabla de frecuencias completa
+
+Para obtener la tabla de frecuencias en una dataframe (formato similar a una hoja de EXCEL, con filas y columnas) usaremos la función *data.frame()*. Pasaremos como argumento cada uno de los productos de los pasos anteriores.
+
+```{r}
+#| echo: true
+tab_freq = data.frame("clases" = names(freq_abs),
+                      "fi" = as.integer(freq_abs),
+                      "hi" = round(as.double(freq_rels),4))
+tab_freq
+```
+
+::: {.callout-important}
+## Importante
+1. Note que antes de cada objeto hay un nombre entre comillas. Ese es el nombre que se le asignará a la columna donde de guarden estos valores.\newline
+3. Note que para las clases se usa la función *as.integer()* y el objeto *freq_abs*. Esta función asegura que se quitan los valores asociados a cada categoria y se conservan solo los nombres.\newline
+```{r}
+#| echo: true
+names(freq_abs)
+```
+3. Note que junto al objeto *freq_abs* se usa la función *as.integer()*. Esta función asegura que se quitan los nombres asociados a los valores y estos de guardan como números enteros.
+```{r}
+#| echo: true
+as.integer(freq_abs)
+```
+4. Note que junto al objeto *freq_rels* se usa la función *as.double()*. Esta función asegura que se quitan los nombres asociados a los valores y estos de guardan como números con decimales.
+```{r}
+#| echo: true
+as.double(freq_rels)
+```
+:::
+
+# Cálculo de las frecuencias acumuladas
+
+::: {.callout-tip}
+## Recuerde
+La acumulación de las frecuencias se ve afectada por el orden que tengan las clases en el dataframe. Por eso antes de calcular las frecuencias acumuladas es necesario verificar que las clases tienen el orden deseado.
+:::
+
+Para agregar las frecuencias acumuladas crearemos nuevas columnas en el dataframe y usaremos la función *cumsum()* para asignar los valores.
+$$tab\_freq\$Fi = cumsum(tab\_freq\$fi)$$
+$$tab\_freq\$Hi = cumsum(tab\_freq\$hi)$$
+
+```{r}
+#| echo: true
+tab_freq$Fi = cumsum(tab_freq$fi)
+tab_freq$Hi = cumsum(tab_freq$hi)
+tab_freq
+```
+Ahora vamos a ordenar las clases por su frecuencia absoluta en orden descendente (empezando con la clase de mayor frecuencia y terminando con la de menor frecuencia) y volveremos a calcular las frecuencias acumuladas.
+```{r}
+#| echo: true
+tab_freq = tab_freq[order(tab_freq$fi, decreasing = TRUE),]
+tab_freq$Fi = cumsum(tab_freq$fi)
+tab_freq$Hi = cumsum(tab_freq$hi)
+tab_freq
+```
+
+# ¡Para terminar!
+
+1. ¿Que orden tenían inicialmente las clases en la tabla de frecuencias? ¿Que orden tienen las clases en la última tabla de frecuencias? ¿En cuál de los dos casos tienen más significado las frecuencias acumuladas?
+
+2. Interprete los siguientes valores de la última tabla de frecuencias.
+    a) La frecuencia absoluta (fi) de la clase Mailed check
+    b) La frecuencia relativa (hi) de la clase Credit card (automatic)
+    c) La frecuencia acumulada (Fi) de la clase Bank transfer (automatic)
+    d) La frecuencia relativa acumulada (Hi) de la clase Bank transfer (automatic).
+
 
