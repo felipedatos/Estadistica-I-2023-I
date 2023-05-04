@@ -116,8 +116,8 @@ La acumulación de las frecuencias se ve afectada por el orden que tengan las cl
 :::
 
 Para agregar las frecuencias acumuladas crearemos nuevas columnas en el dataframe y usaremos la función *cumsum()* para asignar los valores.
-$$tab_freq\$Fi = cumsum(tab_freq\$fi)$$
-$$tab_freq\$Hi = cumsum(tab_freq\$hi)$$
+$$tab\\_freq\$Fi = cumsum(tab\\_freq\$fi)$$
+$$tab\\_freq\$Hi = cumsum(tab\\_freq\$hi)$$
 
 ```{r}
 #| echo: true
