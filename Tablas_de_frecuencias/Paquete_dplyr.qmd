@@ -12,7 +12,7 @@ execute:
 toc: false
 number-sections: true
 toc-title: "Contenido"
-code-annotations: hover
+code-annotations: true
 ---
 
 # Crear un cuaderno nuevo
