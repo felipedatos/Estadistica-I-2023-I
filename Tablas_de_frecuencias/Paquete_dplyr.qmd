@@ -63,9 +63,6 @@ flowchart TB
   Op2 --" arrange(desc(fi)) "--> Op3(Ordenar)
   Op3 --"mutate(Fi = cumsum(fi), Hi = cumsum(hi))"--> Op4(Fi y Hi)
   Op4 --> Sal[T. de frec]
-  %%--> S23[Tabla de\nfrecuencias]
-  
-  %%S11[datos] -- " count(PaymentMethod, name = #quot;fi#quot;) " --> S12(fi) -- " mutate(hi = fi/sum(fi)) " --> S13(hi)
 ```
 
 # Obtención de las frecuencias absolutas
@@ -103,11 +100,14 @@ La función *mutate()* nos permite crear una nueva columna o modificar una colum
 
 ```{r}
 #| echo: true
-tab_freq = datos %>%
-  count(PaymentMethod, name = "fi") %>%
-  mutate(hi = fi/sum(fi))
+tab_freq = datos %>%                      # <1>
+  count(PaymentMethod, name = "fi") %>%   # <2>
+  mutate(hi = fi/sum(fi))                 # <3>
 tab_freq
 ```
+1. Cargar los datos importados
+2. Calcular las frecuencias absolutas
+3. Calcular las frecuencias relativas
 
 # Cálculo de las frecuencias acumuladas
 
@@ -128,12 +128,19 @@ Para obtener las frecuencias acumuladas de cada una de las clases utilizaremos n
 
 ```{r}
 #| echo: true
-tab_freq = datos %>%
-  count(PaymentMethod, name = "fi") %>%
-  mutate(hi = fi/sum(fi)) %>%
-  mutate(Fi = cumsum(fi), Hi = cumsum(hi))
+tab_freq = datos %>%                      # <1>
+  count(PaymentMethod, name = "fi") %>%   # <2>
+  mutate(hi = fi/sum(fi)) %>%             # <3>
+  mutate(Fi = cumsum(fi),                 # <4> 
+         Hi = cumsum(hi)                  # <4>
+         )                                # <4>
 tab_freq
 ```
+1. Cargar los datos importados
+2. Calcular las frecuencias absolutas
+3. Calcular las frecuencias relativas
+4. Calcular las frecuencias acumuladas
+
 
 ::: {.callout-note}
 ## **Para tener en cuenta**

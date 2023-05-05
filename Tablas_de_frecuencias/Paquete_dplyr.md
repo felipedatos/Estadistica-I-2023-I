@@ -1,5 +1,4 @@
-Tablas de frecuencia con la librería dplyr de R
-================
+# Tablas de frecuencia con la librería dplyr de R
 Felipe Andres Martínez Vera
 
 # Crear un cuaderno nuevo
@@ -9,11 +8,8 @@ Para crear un nuevo cuaderno de **Colab** basado en R use el este link:
 
 # Cargar el archivo que contiene los datos a **Colab**
 
-<figure>
 <img src="Cargar_archivo.png" style="width:80.0%"
 alt="Cargar el archivo a Colab" />
-<figcaption aria-hidden="true">Cargar el archivo a Colab</figcaption>
-</figure>
 
 # Cargar las librerias que se van a utilizar
 
@@ -81,16 +77,8 @@ head(datos)
 
 </div>
 
-<div>
-
-<p>
-
 <img src="Paquete_dplyr_files\figure-commonmark\mermaid-figure-1.png"
 style="width:5in;height:5.78in" />
-
-</p>
-
-</div>
 
 # Obtención de las frecuencias absolutas
 
@@ -114,10 +102,18 @@ frecuencias absolutas. Si no se define el argumento *name* la columna
 con las frecuencias aboslutas se llamará “n”.
 
 ``` r
-tab_freq = datos %>%                    # <1>
-  count(PaymentMethod, name = "fi")     # <2>
+tab_freq = datos %>%
+  count(PaymentMethod, name = "fi")
 tab_freq
 ```
+
+Line 1  
+Cargar los datos importados
+
+Line 2  
+Calcular las frecuencias absolutas
+
+<!-- -->
 
     # A tibble: 5 × 2
       PaymentMethod                fi
@@ -127,9 +123,6 @@ tab_freq
     3 Electronic check           2387
     4 Mailed check               1621
     5 <NA>                          4
-
-1.  Cargar los datos importados
-2.  Calcular las frecuencias absolutas
 
 # Obtención de las frecuencias relativas
 
@@ -159,6 +152,17 @@ tab_freq = datos %>%
   mutate(hi = fi/sum(fi))
 tab_freq
 ```
+
+Line 1  
+Cargar los datos importados
+
+Line 2  
+Calcular las frecuencias absolutas
+
+Line 3  
+Calcular las frecuencias relativas
+
+<!-- -->
 
     # A tibble: 5 × 3
       PaymentMethod                fi       hi
@@ -194,9 +198,25 @@ utilizaremos nuevamente la función *mutate()* de la librería *dplyr*.
 tab_freq = datos %>%
   count(PaymentMethod, name = "fi") %>%
   mutate(hi = fi/sum(fi)) %>%
-  mutate(Fi = cumsum(fi), Hi = cumsum(hi))
+  mutate(Fi = cumsum(fi),
+         Hi = cumsum(hi)
+         )
 tab_freq
 ```
+
+Line 1  
+Cargar los datos importados
+
+Line 2  
+Calcular las frecuencias absolutas
+
+Line 3  
+Calcular las frecuencias relativas
+
+Lines 4-6  
+Calcular las frecuencias acumuladas
+
+<!-- -->
 
     # A tibble: 5 × 5
       PaymentMethod                fi       hi    Fi    Hi
