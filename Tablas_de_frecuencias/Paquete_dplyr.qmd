@@ -153,13 +153,20 @@ Para ordenar el dataframe de acuerdo a los valores de la columna "fi" utilizarem
 
 ```{r}
 #| echo: true
-tab_freq = datos %>%
-  count(PaymentMethod, name = "fi") %>%
-  mutate(hi = fi/sum(fi)) %>%
-  arrange(desc(fi)) %>% 
-  mutate(Fi = cumsum(fi), Hi = cumsum(hi))
+tab_freq = datos %>%                           # <1>
+  count(PaymentMethod, name = "fi") %>%        # <2>  
+  mutate(hi = fi/sum(fi)) %>%                  # <3>
+  arrange(desc(fi)) %>%                        # <4> 
+  mutate(Fi = cumsum(fi),                      # <5>
+         Hi = cumsum(hi)                       # <5>
+         )                                     # <5>
 tab_freq
 ```
+1. Cargar los datos importados
+2. Calcular las frecuencias absolutas
+3. Calcular las frecuencias relativas
+4. Ordenar la tabla de frecuencias
+5. Calcular las frecuencias acumuladas
 
 # ¡Para terminar!
 

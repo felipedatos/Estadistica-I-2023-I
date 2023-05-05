@@ -250,10 +250,29 @@ utilizaremos la función *arrange()* de la librería *dplyr*.
 tab_freq = datos %>%
   count(PaymentMethod, name = "fi") %>%
   mutate(hi = fi/sum(fi)) %>%
-  arrange(desc(fi)) %>% 
-  mutate(Fi = cumsum(fi), Hi = cumsum(hi))
+  arrange(desc(fi)) %>%
+  mutate(Fi = cumsum(fi),
+         Hi = cumsum(hi)
+         )
 tab_freq
 ```
+
+Line 1  
+Cargar los datos importados
+
+Line 2  
+Calcular las frecuencias absolutas
+
+Line 3  
+Calcular las frecuencias relativas
+
+Line 4  
+Ordenar la tabla de frecuencias
+
+Lines 5-7  
+Calcular las frecuencias acumuladas
+
+<!-- -->
 
     # A tibble: 5 × 5
       PaymentMethod                fi       hi    Fi    Hi
