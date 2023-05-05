@@ -1,0 +1,156 @@
+---
+title: "Tablas de frecuencia con la librería dplyr de R"
+author: Felipe Andres Martínez Vera
+format:
+  gfm:
+    mermaid-format: png
+execute: 
+  eval: true
+  echo: false
+  warning: false
+  error: false
+toc: false
+number-sections: true
+toc-title: "Contenido"
+---
+
+# Crear un cuaderno nuevo
+
+Para crear un nuevo cuaderno de **Colab** basado en R use el este link: <https://colab.research.google.com/#create=true&language=r>
+
+# Cargar el archivo que contiene los datos a **Colab**
+
+![Cargar el archivo a Colab](Cargar_archivo.png){width=80%}
+
+# Cargar las librerias que se van a utilizar
+
+En este caso requerimos la librería *dplyr*. Dado que esta hace parte del paquete *tidyverese* cargaremos éste último.
+
+```{r}
+#| echo: true
+#| warning: true
+library(tidyverse)
+options(scipen = 9999)
+```
+
+
+# Importar los datos a R
+
+Dado que ya cargamos el paquete *tidyverse* usaremos la función *read_csv()* en lugar de *read.csv()*. Ésta función es mas eficiente que su homóloga del paquete "base". Como argumento de debe pasar la ruta al archivo que se desea importar.
+
+```{r}
+#| echo: true
+datos = read_csv("C:/GitHub/Estadistica-I-2023-I/Tablas_de_frecuencias/Clientes_Telcomunicaciones-Churn.csv")
+head(datos)
+```
+
+::: {.callout-note}
+## **Para tener en cuenta**
+A partir de este momento trabajaremos con la variable "PaymentMethod" que indica el método de pago que utiliza el cliente. Sin embargo, los procedimientos aplicados pueden ser replicados con cualquier otra variable cualitativa. 
+:::
+
+```{mermaid}
+%%| fig-width: 5
+flowchart TB
+  Ent[datos] --" count(PaymentMethod, name = #quot;fi#quot;) "--> Op1(fi)
+  Op1 --" mutate(hi = fi/sum(fi)) "--> Op2(hi)
+  Op2 --" arrange(desc(fi)) "--> Op3(Ordenar)
+  Op3 --"mutate(Fi = cumsum(fi), Hi = cumsum(hi))"--> Op4(Fi y Hi)
+  Op4 --> Sal[T. de frec]
+  %%--> S23[Tabla de\nfrecuencias]
+  
+  %%S11[datos] -- " count(PaymentMethod, name = #quot;fi#quot;) " --> S12(fi) -- " mutate(hi = fi/sum(fi)) " --> S13(hi)
+```
+
+# Obtención de las frecuencias absolutas
+
+::: {.callout-tip}
+## Recuerde
+Frecuencia absoluta
+: La frecuencia de una clase (categoría o conjunto de valores) es el número de veces que la clase fue observada. 
+:::
+
+Para obtener las frecuencias de cada uno de los valores únicos de la variable usaremos la función *count()* de la librería *dplyr*.
+
+Al usar la función *count()* debemos indicar como primer argumento la variable (columna) para la cual queremos obtener las frecuencias y en el argumento *name* podremos definir el nombre de la columna que tendrá las frecuencias absolutas. Si no se define el argumento *name* la columna con las frecuencias aboslutas se llamará "n".
+
+```{r}
+#| echo: true
+tab_freq = datos %>% count(PaymentMethod, name = "fi")
+tab_freq
+```
+
+# Obtención de las frecuencias relativas
+
+::: {.callout-tip}
+## Recuerde
+Frecuencia relativa
+: La frecuencia relativa de una clase (categoría o conjunto de valores) es el número de veces que la clase fue observada dividido entre el total de observaciones. 
+:::
+
+Para obtener las frecuencias relativas de cada una de las clases usaremos la función *mutate()* de la librería *dplyr*.
+
+La función *mutate()* nos permite crear una nueva columna o modificar una columna existente en un dataframe. Al usar *mutate()* debemos indicar el nombre de la columna que se desea crear o modificar, introducir el signo =, e indicar la formula que se debe emplear para calcular el valor de esta.
+
+```{r}
+#| echo: true
+tab_freq = datos %>%
+  count(PaymentMethod, name = "fi") %>%
+  mutate(hi = fi/sum(fi))
+tab_freq
+```
+
+# Cálculo de las frecuencias acumuladas
+
+::: {.callout-tip}
+## Recuerde
+Frecuencia absoluta acumulada
+: La frecuencia acumulada de una clase (categoría o conjunto de valo-
+res) es el número total de veces que la clase considerada, junto con las
+clases anteriores, fueron observadas.
+
+Frecuencia relativa acumulada
+: La frecuencia relativa acumulada de una clase (categoría o conjunto
+de valores) es la suma de las frecuencias relativas anteriores e inclusive
+la clase en cuestión.
+:::
+
+Para obtener las frecuencias acumuladas de cada una de las clases utilizaremos nuevamente la función *mutate()* de la librería *dplyr*.
+
+```{r}
+#| echo: true
+tab_freq = datos %>%
+  count(PaymentMethod, name = "fi") %>%
+  mutate(hi = fi/sum(fi)) %>%
+  mutate(Fi = cumsum(fi), Hi = cumsum(hi))
+tab_freq
+```
+
+::: {.callout-note}
+## **Para tener en cuenta**
+La acumulación de las frecuencias se ve afectada por el orden que tengan las clases en el dataframe. Por eso antes de calcular las frecuencias acumuladas es necesario verificar que las clases tienen el orden deseado.
+:::
+
+Ahora ordenaremos las clases por su frecuencia absoluta en orden descendente (empezando con la clase de mayor frecuencia y terminando con la de menor frecuencia) y volveremos a calcular las frecuencias acumuladas.
+
+Para ordenar el dataframe de acuerdo a los valores de la columna "fi" utilizaremos la función *arrange()* de la librería *dplyr*.
+
+```{r}
+#| echo: true
+tab_freq = datos %>%
+  count(PaymentMethod, name = "fi") %>%
+  mutate(hi = fi/sum(fi)) %>%
+  arrange(desc(fi)) %>% 
+  mutate(Fi = cumsum(fi), Hi = cumsum(hi))
+tab_freq
+```
+
+# ¡Para terminar!
+
+1. ¿Que orden tenían inicialmente las clases en la tabla de frecuencias? ¿Que orden tienen las clases en la última tabla de frecuencias? ¿En cuál de los dos casos tienen más significado las frecuencias acumuladas?
+
+2. Interprete los siguientes valores de la última tabla de frecuencias.
+    a) La frecuencia absoluta (fi) de la clase Mailed check
+    b) La frecuencia relativa (hi) de la clase Credit card (automatic)
+    c) La frecuencia acumulada (Fi) de la clase Bank transfer (automatic)
+    d) La frecuencia relativa acumulada (Hi) de la clase Bank transfer (automatic).
