@@ -17,8 +17,12 @@ alt="Cargar el archivo a Colab" />
 
 # Cargar las librerias que se van a utilizar
 
-En este caso requerimos la librería *dplyr*. Dado que esta hace parte
-del paquete *tidyverese* cargaremos éste último.
+En este caso requerimos la librería *dplyr*.
+
+***dplyr* hace parte del paquete *tidyverese***. Al cargar *tidyverse*
+se cargan 8 librerías dentro de las que se encuentra *dplyr*. Por
+practicidad se prefiere cargar *tidyverse* completa en lugar de cargar
+las librerías individuales.
 
 ``` r
 library(tidyverse)
@@ -40,8 +44,9 @@ options(scipen = 9999)
 # Importar los datos a R
 
 Dado que ya cargamos el paquete *tidyverse* usaremos la función
-*read_csv()* en lugar de *read.csv()*. Ésta función es mas eficiente que
-su homóloga del paquete “base”. Como argumento de debe pasar la ruta al
+*read_csv(){readr}* en lugar de *read.csv(){base}*. La función
+*read_csv()* es mas eficiente que su homóloga del paquete “base”. Al
+usar *read_csv()*, como primer argumento se debe pasar la ruta del
 archivo que se desea importar.
 
 ``` r
@@ -109,7 +114,8 @@ frecuencias absolutas. Si no se define el argumento *name* la columna
 con las frecuencias aboslutas se llamará “n”.
 
 ``` r
-tab_freq = datos %>% count(PaymentMethod, name = "fi")
+tab_freq = datos %>%                    # <1>
+  count(PaymentMethod, name = "fi")     # <2>
 tab_freq
 ```
 
@@ -121,6 +127,9 @@ tab_freq
     3 Electronic check           2387
     4 Mailed check               1621
     5 <NA>                          4
+
+1.  Cargar los datos importados
+2.  Calcular las frecuencias absolutas
 
 # Obtención de las frecuencias relativas
 
